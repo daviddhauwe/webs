@@ -83,12 +83,10 @@ And add following lines
 In chrome for mobile, you can use the add to start screen functionality, which adds an icon for your webpage to the start screen and gives it an app like look.
 I used [RealFaviconGenerator](https://realfavicongenerator.net) to generate the necessary icons and config files. You can download them with below command. If you want to make yours, go ahead, but don't forget to remove the trailing / in the browserconfig.xml and site.webmanifest.
 
-Copy the icons and config files
+Copy the icons and related files
 
 ```bash
-wget https://api.github.com/repos/daviddhauwe/webs/tarball/ | \
-    tar xz --strip-components=1 && \
-    cp -r favicon_package/ /var/www/webs//
+wget -q -O - https://api.github.com/repos/daviddhauwe/webs/tarball/ | tar xz --strip-components=2 -C /var/www/webs/
 ```
 
 Copy entry.html to index.html and make some canges to it. This file is used by apache.

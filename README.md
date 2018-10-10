@@ -193,7 +193,7 @@ Now it's sufficient to go to `http://your-pi-ip`
 
 Now that the pi is serving your plc's website and the reverse proxy is in place to get the live data, it's time to move on and make some improvements. We will protect the site with a login (forms authentication) and also add caching to speed up loading.
 
-Get the login screen. If needed `initial-scale=1.7` might be adjusted to fit yours, you can also change the page title
+Get the login screen. If you want, you can change the page title
 
 ```bash
 wget https://github.com/daviddhauwe/webs/blob/master/login.html -P /var/www/webs/

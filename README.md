@@ -14,6 +14,8 @@ The solution is an apache webserver running on a Raspberry Pi:
 Using above solution on a mobile device, it's almost as fast as the microbrowser app, with all the security included.
 Below, I tried to explain step-by-step how to do this. My PLC has ip 192.168.0.10 if your's is different, do not forget to change this!
 
+If you have an older plc which does not support html5 (only java-applet, like the ILC 170) it is also possible to use html5, as the pages are served by apache. Browsing the plc website will no longer work, but it is still reachable with microbrowser. If you still want to use the PLC website, you could put the html5 files directly on the Pi and skip the copy step as described below.
+
 ## What you need
 
 - a plc with a working webvisit visualisation
@@ -191,7 +193,7 @@ Now it's sufficient to go to `http://your-pi-ip`
 
 ## Password protect your site
 
-Now that the pi is serving your plc's website and the reverse proxy is in place to get the live data, it's time to move on and make some improvements. We will protect the site with a login (forms authentication) and also add caching to speed up loading.
+Now that the Pi is serving your plc's website and the reverse proxy is in place to get the live data, it's time to move on and make some improvements. We will protect the site with a login (forms authentication) and also add caching to speed up loading.
 
 Get the login screen. If you want, you can change the page title
 
@@ -280,7 +282,7 @@ sudo apachectl configtest
 sudo apachectl restart
 ```
 
-Now you can configure your router and forward the ports 80 and 443 to your pi's ip.
+Now you can configure your router and forward the ports 80 and 443 to your Pi's ip.
 
 ## Get a dynamic dns name
 

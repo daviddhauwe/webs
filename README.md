@@ -212,8 +212,8 @@ sudo nano /etc/apache2/sites-available/webs.conf
 Create a password file and add some users, htpasswd will ask for a password
 
 ```bash
-sudo htpasswd -c /etc/apache2/passwd1 username1
-sudo htpasswd /etc/apache2/passwd1 username2
+sudo htpasswd -c /etc/apache2/passwd username1
+sudo htpasswd /etc/apache2/passwd username2
 ```
 
 Encrypt the session cookie with a passphrase, enter some passphrase in this file, it can be difficult, as you don't have to remember it.

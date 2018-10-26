@@ -1,5 +1,7 @@
 # Secure and fast acces to your Phoenix Contact Webvisit PLC visualisation with help of a Raspberry Pi
 
+![screenshot](screenshot.png#center)
+
 At home, I have a webvisit visualisation on my phoenix contact plc. Viewing this secure and fast from anywhere and on any device is not so easy. I used to have a vpn connection to my home network on my pc and smartphone. Over this vpn tunnel, I browsed to the html5 webpage or used the microbrowser app. Connecting the vpn or leave the connection open is not so convenient, certainly not on a mobile device. Also the html5 webpage is rather slow.
 
 So it's time for another solution which must be secure, fast and above all user friendly!
@@ -91,11 +93,11 @@ Copy the icons and related files
 wget -q -O - https://api.github.com/repos/daviddhauwe/webs/tarball/ | tar xz --strip-components=2 -C /var/www/webs/
 ```
 
-Copy entry.html to index.html and make some canges to it. This file is used by apache.
+Copy entry.html to index.shtml and make some canges to it. This file is used by apache.
 
 ```bash
-cp /var/www/webs/entry.html /var/www/webs/index.html
-nano /var/www/webs/index.html
+cp /var/www/webs/entry.html /var/www/webs/index.shtml
+nano /var/www/webs/index.shtml
 ```
 
 Add the following in the `<head>` section, the `initial-scale=1.7` might be adjusted to fit yours
@@ -116,8 +118,15 @@ Add the following in the `<head>` section, the `initial-scale=1.7` might be adju
 
 Change the cgi-bin root path which is used by the html5 page (hmi.js). It is also possible to change this in webvisit project configurations - runtime configurations. But this would break the functionality directly on the PLC.
 
-```html
+```javascript
 CGI_RELATIVTOROOT: "webs/", //adapted
+```
+
+Some lines later, afther the last `SpiderControl.LoadView()` add this to let webvisit know the logged in user
+
+```javascript
+//pass httpd_username to container variable
+SpiderControl.WriteContainer('httpd_username','<!--#echo var="REMOTE_USER" -->');
 ```
 
 ## Configure apache
@@ -131,7 +140,7 @@ sudo ln -s /var/www/webs /var/www/html/webs
 Enable the necessary modules in apache
 
 ```bash
-sudo a2enmod proxy proxy_http headers auth_form request session_cookie session_crypto ssl expires
+sudo a2enmod proxy proxy_http headers auth_form request session_cookie session_crypto ssl expires include
 ```
 
 Make a new site configuration
@@ -149,7 +158,7 @@ And paste following code into it (adjust your plc ip)
     SetEnvIfNoCase Request_URI "\.(?:svgz)$" no-gzip
     Header set Content-Encoding gzip env=no-gzip
 </Location>
-#Reverse proxy to PLC : adjust CGI_RELATIVTOROOT: "webs/" in index.html
+#Reverse proxy to PLC : adjust CGI_RELATIVTOROOT: "webs/" in index.shtml
 ProxyPass /webs/cgi-bin http://192.168.0.10/cgi-bin ttl=120
 ```
 
@@ -337,6 +346,10 @@ The wizard will ask you some questions, here are the answers:
 When apache is restarted, you can test your site by browsing to `https://your-dns-name`.
 
 If you want, you can verify the ssl configuration with [SSL Labs](https://www.ssllabs.com/ssltest/). It should be grade A as certbot makes the right settings for you.
+
+## Optional automatic login in webvisit
+
+The logged in username is available in the container variable `httpd_username`. You can bypass you normal login mechanism by assiging a userlevel based on the username. This can be done with the event painter EventP_write_EqualAdvanced. You can hide the default login button when the httpd_username container is not empty.
 
 ## Done
 
